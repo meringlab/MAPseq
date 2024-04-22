@@ -8,6 +8,12 @@
 #include <eutils/ernd.h>
 #include <eutils/ethread.h>
 
+// Sets the seed value
+void setUserSeed(int seed);
+
+// Returns the current seed value
+int getUserSeed();
+
 class eseqtax;
 
 class ediag {

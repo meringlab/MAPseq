@@ -3737,6 +3737,8 @@ void help() {
   printf("Optional arguments:\n");
   printf("%20s   %5s  %s\n", "-nthreads", "<int>",
          "number of threads to use [default: 4]");
+  printf("%20s   %5s  %s\n", "-seed", "<int>",
+         "fix random seed [default: None]");
   printf("\n");
   printf("Performance/sensitivity:\n");
   printf("%20s   %5s  %s\n", "-tophits", "<int>",
@@ -4864,6 +4866,9 @@ int emain() {
 
   epregister(sens);
 
+  int seed = -1;
+  epregister(seed);
+
   epregister(minqual);
   epregister(minlen);
   epregister(fastq);
@@ -4946,6 +4951,9 @@ int emain() {
     db.tophits = 10000;
     db.topotus = 60;
   }
+
+  setUserSeed(seed);
+
   cerr << "# mapseq v" << MAPSEQ_PACKAGE_VERSION << " (" << __DATE__ << ")"
        << endl;
 
@@ -4955,6 +4963,10 @@ int emain() {
     return (0);
   }
   cerr << "# threads: " << nthreads << endl;
+
+  if (seed != -1) {
+    cerr << "# user defined seed: " << getUserSeed() << endl;
+  }
 
   /*
     estrhash ignseqs;

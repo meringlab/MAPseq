@@ -1,4 +1,5 @@
 #include "eseqdb.h"
+#include "libs/eutils/estr.h"
 
 #include <deque>
 #include <eutils/efile.h>
@@ -29,6 +30,23 @@ float minqual = 0.05;
 
 emtdata mtdata;
 
+int userSeed = -1;
+
+// Implementation of setSeed
+void setUserSeed(int seed) { userSeed = seed; }
+
+// Implementation of getSeed
+int getUserSeed() { return userSeed; }
+
+int stringToInt(estr str) {
+
+  int sum = 0;
+  for (int i = 0; i < str.length(); i++) {
+    sum += str[i];
+  }
+  return sum;
+}
+
 estr outfmt_simple(const etax &tax, const earrayof<double, int> &ptax,
                    const efloatarray &mcfarr) {
   estr res;
@@ -56,6 +74,7 @@ void taskSearchPaired() {
   estr outstr;
   esearchws searchws;
   searchws.initPaired(*mtdata.seqdb);
+
   /*
   //  searchws.seqkmers.init(MAXSIZE,-1);
   //  searchws.revseqkmers.init(MAXSIZE,-1);
@@ -96,6 +115,14 @@ void taskSearchPaired() {
 
       earray<epredinfo> pinfoarr;
       //    ebasicarray<ealigndata> matchcounts;
+      if (userSeed > -1) {
+        int randomSeedSeqS1 = stringToInt(s.print_seq());
+        int randomSeedSeqS2 = stringToInt(s2.print_seq());
+        randomSeedSeqS1 += randomSeedSeqS2;
+        randomSeedSeqS1 += userSeed;
+        searchws.rng.setSeed(randomSeedSeqS1);
+      }
+
       mtdata.seqdb->seqsearchpair(pbuf->keys(i), s, s2, pinfoarr, searchws);
       if (pinfoarr.size() == 0)
         continue;
@@ -238,6 +265,13 @@ void taskSearch() {
 
     for (int i = 0; i < pbuf->size(); ++i) {
       eseq &s(pbuf->values(i));
+
+      if (userSeed > -1) {
+        int randomSeedSeq = stringToInt(s.print_seq());
+        randomSeedSeq += userSeed;
+        searchws.rng.setSeed(randomSeedSeq);
+      }
+
       earray<epredinfo> pinfoarr;
       //    ebasicarray<ealigndata> matchcounts;
       if (mtdata.galign)
@@ -1546,6 +1580,15 @@ int eseqdb::processQueryPairendFASTQ(const estr &fname, const estr &fname2,
 }
 
 void randomize(ernd &prnd, eintarray &seqids) {
+  /* ernd rnd; */
+  /* int seed = getUserSeed(); */
+  /* rnd.setSeed(seed); */
+  /* int seqidSeed = 0; */
+  /* for (int i = seqids.size() - 1; i > 0; --i) { */
+  /*   seqidSeed += seqids[i]; */
+  /* } */
+  /* rnd.setSeed(seqidSeed); */
+  /* cerr << seqidSeed << endl; */
   for (int i = seqids.size() - 1; i > 0; --i) {
     int r = int(prnd.uniform() * (i + 1));
     if (r != i)
@@ -3509,6 +3552,7 @@ void esearchws::init(const eseqdb &seqdb) {
   offset2 = 1u;
   kmermask.init(MAXSIZE, 0u);
   maskid = 1u;
+
   /*
     // needed for paired end search
     searchws.kmerpos3.init(MAXSIZE,0u);
