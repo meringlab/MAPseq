@@ -1,8 +1,7 @@
 #!/bin/bash
 
-wget http://www.microbeatlas.org/mapref/mapref-3.0.tar.gz
-# mkdir -p data
-tar -xvzf mapref-3.0.tar.gz && mv mapref-3.0/* data/ && rmdir mapref-3.0 && touch data/mapref-3.0.fna
+# wget http://www.microbeatlas.org/mapref/mapref-3.0.tar.gz
+tar -xvzf data/mapref-3.0.tar.gz && mv mapseq/* data/ && rmdir mapseq && touch data/mapref-3.0.fna
 
 if [ ! -d "libs/eutils" ]; then
 	mkdir -p libs
