@@ -1,8 +1,14 @@
 #!/bin/bash
 
 wget http://www.microbeatlas.org/mapref/mapref-3.0.tar.gz
-tar -Cdata -xvzf mapref-3.0.tar.gz && mv data/mapref-3.0/* data/ && rmdir data/mapref-3.0 && touch data/mapref-3.0.fna
+# mkdir -p data
+tar -xvzf mapref-3.0.tar.gz && mv mapref-3.0/* data/ && rmdir mapref-3.0 && touch data/mapref-3.0.fna
 
-svn co https://www.konceptfx.com/svn/eutils
-pushd eutils
-svn update
+if [ ! -d "libs/eutils" ]; then
+	mkdir -p libs
+	svn co -r 1194 https://www.konceptfx.com/svn/eutils libs/eutils
+else
+	pushd libs/eutils
+	svn update
+	popd
+fi
