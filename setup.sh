@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# wget http://www.microbeatlas.org/mapref/mapref-3.0.tar.gz
-git-lfs pull
+wget http://www.microbeatlas.org/mapref/mapref-3.0.full.tar.gz
+# git-lfs pull
 tar -xvzf data/mapref-3.0.tar.gz && mv mapseq/* data/ && rmdir mapseq && touch data/mapref-3.0.fna
 
 if [ ! -d "libs/eutils" ]; then
