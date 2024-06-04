@@ -23,7 +23,7 @@ float sweight = 30.0;
 float sweightabs = 0.1;
 float cfthres = 0.5;
 
-int minlen = 75;
+int minlen = 30;
 float minqual = 0.05;
 
 // unsigned int akmers[MAXSIZE]; // 6bases
@@ -3605,7 +3605,7 @@ void esearchws::initProt(const eseqdb &seqdb) {
 }
 
 eseqdb::eseqdb()
-    : minscore(60), tophits(20), maxhits(20), topotus(10), otulim(50),
+    : minscore(30), tophits(20), maxhits(20), topotus(10), otulim(50),
       minid1(1), minid2(1) {
   for (unsigned int i = 0; i < MAXSIZE; ++i)
     akmers[i] = 0x00u;

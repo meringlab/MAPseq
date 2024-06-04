@@ -35,7 +35,7 @@ float lambda = 1.280;
 
 bool galign = false;
 
-eoption<outfmt_fd> outfmt;
+eoption<outfmt_fd> outfmt_choice;
 
 /*
 const float matchcost=2.0;
@@ -3887,7 +3887,7 @@ void initDB(eseqdb &db, int argi) {
   if (!efile(dbfile).exists())
     ldie("fasta db not found: " + dbfile);
 
-  db.init(dbfile, nocluster, outfmt.value());
+  db.init(dbfile, nocluster, outfmt_choice.value());
 
   //  cerr << "# fcount: " << fcount << " otukmercount: " << okmercount << endl;
 }
@@ -4895,9 +4895,8 @@ int emain() {
   epregister(cutoffs);
   estr dbfilter;
   epregister(dbfilter);
-  outfmt.choice = 0;
-  outfmt.add("confidences", outfmt_confidences);
-  outfmt.add("simple", outfmt_simple);
+
+  estr outfmt = "confidences";
   epregister(outfmt);
 
   daemonArgs(actionDaemon);
@@ -4951,6 +4950,14 @@ int emain() {
     db.tophits = 10000;
     db.topotus = 60;
   }
+
+  if (outfmt == "confidences")
+    outfmt_choice.choice = 0;
+  else
+    outfmt_choice.choice = 1;
+
+  outfmt_choice.add("confidences", outfmt_confidences);
+  outfmt_choice.add("simple", outfmt_simple);
 
   setUserSeed(seed);
 
